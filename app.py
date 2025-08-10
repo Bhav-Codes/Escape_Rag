@@ -1,22 +1,17 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import List
-import json
+from flask import Flask, request, jsonify
+from src.main import run_pipeline  # your existing function
 
-from src.main import run_pipeline  # we already wrote this function
+app = Flask(__name__)
 
-app = FastAPI()
+@app.route("/hackrx/run", methods=["POST"])
+def run_hackrx():
+    data = request.get_json()  # Read incoming JSON
+    documents = data.get("documents")
+    questions = data.get("questions")
 
-# Input schema matching your sample
-class HackRxRequest(BaseModel):
-    documents: str
-    questions: List[str]
+    result = run_pipeline(documents, questions)
 
-# Output schema
-class HackRxResponse(BaseModel):
-    answers: List[str]
+    return jsonify({"answers": result})
 
-@app.post("/hackrx/run", response_model=HackRxResponse)
-def run_hackrx(req: HackRxRequest):
-    result = run_pipeline(req.documents, req.questions)
-    return result
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
