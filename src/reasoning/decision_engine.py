@@ -17,7 +17,7 @@ from typing import List, Dict
 import google.generativeai as genai
 from src.config import GEMINI_MODEL, GOOGLE_API_KEY
 
-load_dotenv()  # Load environment variables from .env file
+# load_dotenv()  # Load environment variables from .env file
 
 # Configure Gemini client once at import-time
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
